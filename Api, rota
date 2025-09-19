@@ -1,0 +1,173 @@
+ Lista Completa de APIs, Requisições e Rotas da Plataforma
+
+🔐 API de Autenticação (EDUSP)
+
+1. Login - POST
+
+```http
+POST https://edusp-api.ip.tv/registration/edusp
+Headers:
+  :authority: edusp-api.ip.tv
+  :method: POST
+  :path: /registration/edusp
+  :scheme: https
+  accept: */*
+  content-type: application/json
+  origin: https://tarefaspchipss.netlify.app
+  x-api-platform: webclient
+  x-api-realm: edusp
+  x-client-domain: tarefaspchipss.netlify.app
+  x-client-signature: [assinatura_aleatória]
+  x-client-timestamp: [timestamp]
+  x-request-id: [id_aleatório]
+
+Body:
+{
+  "login": "0001122187695SP",
+  "password": "sua_senha",
+  "realm": "edusp"
+}
+```
+
+2. Obter Dados do Usuário - GET
+
+```http
+GET https://edusp-api.ip.tv/room/user
+Headers:
+  :authority: edusp-api.ip.tv
+  :method: GET
+  :path: /room/user
+  :scheme: https
+  accept: */*
+  content-type: application/json
+  x-api-key: [auth_token_do_usuario]
+  x-client-domain: tarefaspchipss.netlify.app
+  x-client-signature: [assinatura_aleatória]
+  x-client-timestamp: [timestamp]
+  x-request-id: [id_aleatório]
+```
+
+📚 API de Tarefas (TMS)
+
+3. Listar Tarefas Pendentes - GET
+
+```http
+GET https://edusp-api.ip.tv/tms/task/todo?expired_only=false&publication_target[]=r0552a0a5151aba628-l&is_essay=false&is_exam=false&answer_statuses=draft&answer_statuses=pending&with_answer=true&with_apply_moment=true&publication_target[]=1173&publication_target[]=764&publication_target[]=1552&limit=100&filter_expired=true&offset=0
+
+Headers:
+  :authority: edusp-api.ip.tv
+  :method: GET
+  :path: /tms/task/todo?...
+  :scheme: https
+  accept: text/html,application/xhtml+xml,application/xml;q=0.9
+  cache-control: no-cache
+  pragma: no-cache
+  x-api-key: [auth_token_do_usuario]
+  x-api-platform: webclient
+  x-api-realm: edusp
+  x-client-domain: tarefaspchipss.netlify.app
+  x-client-signature: [assinatura_aleatória]
+  x-client-timestamp: [timestamp]
+  x-request-id: [id_aleatório]
+```
+
+4. Detalhes da Sala - GET
+
+```http
+GET https://edusp-api.ip.tv/room/detail/r0552a0a5151aba628-l?fields[]=id&fields[]=name&with_category_groups=true
+
+Headers:
+  :authority: edusp-api.ip.tv
+  :method: GET
+  :path: /room/detail/...
+  :scheme: https
+  accept: text/html,application/xhtml+xml,application/xml;q=0.9
+  cache-control: no-cache
+  pragma: no-cache
+  x-api-key: [auth_token_do_usuario]
+  x-client-domain: tarefaspchipss.netlify.app
+  x-client-signature: [assinatura_aleatória]
+  x-client-timestamp: [timestamp]
+  x-request-id: [id_aleatório]
+```
+
+🎯 Categorias de Tarefas (Mapeamento)
+
+```javascript
+const categoryMap = {
+  1: 'Língua Portuguesa',
+  5: 'Geografia',
+  6: 'História', 
+  7: 'Sociologia',
+  8: 'Biologia',
+  9: 'Física',
+  10: 'Matemática',
+  11: 'Química',
+  13: 'Língua Estrangeira Moderna - Inglês',
+  17: 'Ciências',
+  11621: 'Educação Financeira',
+  5978: 'Filosofia',
+  14332: 'Educação Financeira',
+  156886: 'Multidisciplinar',
+  459708: '90 dias SAEB - Matemática',
+  459709: '90 dias SAEB - Língua Portuguesa'
+};
+```
+
+🔧 Headers Comuns em Todas as Requisições
+
+Headers Obrigatórios:
+
+```http
+x-api-platform: webclient
+x-api-realm: edusp
+x-client-domain: tarefaspchipss.netlify.app
+x-client-signature: [base64_aleatório]  # Ex: MTA5NDUxMDI0MQ==
+x-client-timestamp: [timestamp_milissegundos]  # Ex: 1754077195698
+x-request-id: [6_caracteres_aleatórios]  # Ex: anxhud
+```
+
+Headers de Autenticação:
+
+```http
+x-api-key: [jwt_token]  # Ex: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+📊 Estrutura de Respostas
+
+Resposta de Login Bem-sucedido:
+
+```json
+{
+  "success": true,
+  "message": "Login realizado com sucesso",
+  "user_info": {
+    "nick": "vitorhugoro0000000-sp",
+    "auth_token": "eyJhbGciOiJIUzI1NiIsInCI6IkpXVCJ9...",
+    "external_id": "65d62dd3ab29f837b0f6",
+    "name": "xxxxx"
+  }
+}
+```
+
+Resposta de Lista de Tarefas:
+
+```json
+{
+  "success": true,
+  "tasks": [
+    {
+      "id": "12345",
+      "title": "Título da Tarefa",
+      "category_ids": [10],
+      "status": "pending",
+      "publish_at": "2024-01-15T10:00:00Z",
+      "expire_at": "2024-01-20T23:59:59Z",
+      "result_score": null,
+      "description": "Descrição da tarefa...",
+      "room_name_for_apply": "r0552a0a5151aba628-l"
+    }
+  ],
+  "count": 5
+}
+```
